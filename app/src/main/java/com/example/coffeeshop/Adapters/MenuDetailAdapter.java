@@ -12,6 +12,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
+import com.example.coffeeshop.Fragments.CartDialog;
 import com.example.coffeeshop.R;
 
 public class MenuDetailAdapter extends RecyclerView.Adapter<MenuDetailAdapter.MyViewHolder> {
@@ -48,6 +49,14 @@ public class MenuDetailAdapter extends RecyclerView.Adapter<MenuDetailAdapter.My
             super(itemView);
             cardView = itemView.findViewById(R.id.menulist_cardview);
             img_Like = itemView.findViewById(R.id.img_like);
+
+            cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    CartDialog dialog = new CartDialog();
+                    dialog.show(activity.getSupportFragmentManager(),"cart");
+                }
+            });
 
             img_Like.setOnClickListener(new View.OnClickListener() {
                 @Override
