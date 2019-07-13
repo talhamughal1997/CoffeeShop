@@ -43,8 +43,7 @@ public class MenuFragment extends Fragment {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_menu, container, false);
 
-        ref = FirebaseDatabase.getInstance().getReference().child("Menu").child("CoffeeItems");
-
+        ref = FirebaseDatabase.getInstance().getReference().child("Menu").child("Coffee");
         setDataintoArray();
 
 
