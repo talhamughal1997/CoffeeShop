@@ -1,6 +1,7 @@
 package com.example.coffeeshop.Fragments;
 
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -10,9 +11,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.coffeeshop.Adapters.MenuAdapter;
-import com.example.coffeeshop.Models.CoffeeModel;
+import com.example.coffeeshop.Controllers.Utils;
+import com.example.coffeeshop.Models.MenuModel;
 import com.example.coffeeshop.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -30,7 +33,8 @@ public class MenuFragment extends Fragment {
     View rootView;
     RecyclerView recyclerView;
     DatabaseReference ref;
-    ArrayList<CoffeeModel> cofeeArray;
+    ArrayList<MenuModel> cofeeArray;
+    Dialog progressDialog;
 
     public MenuFragment() {
         // Required empty public constructor
@@ -43,7 +47,8 @@ public class MenuFragment extends Fragment {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_menu, container, false);
 
-        ref = FirebaseDatabase.getInstance().getReference().child("Menu").child("Coffee");
+        progressDialog = Utils.getProgressDialog(getActivity());
+
         setDataintoArray();
 
 
@@ -51,15 +56,20 @@ public class MenuFragment extends Fragment {
     }
 
     private void setDataintoArray() {
+        progressDialog.show();
         cofeeArray = new ArrayList<>();
+
+        ref = FirebaseDatabase.getInstance().getReference().child("Menu");
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    cofeeArray.add(ds.getValue(CoffeeModel.class));
+                    Toast.makeText(getActivity(), ""+ds.getRef().getKey(), Toast.LENGTH_SHORT).show();
+                    cofeeArray.add(ds.child("define").getValue(MenuModel.class));
                 }
                 setRecyclerView(cofeeArray);
+                progressDialog.hide();
             }
 
             @Override
@@ -69,7 +79,7 @@ public class MenuFragment extends Fragment {
         });
     }
 
-    private void setRecyclerView(ArrayList<CoffeeModel> cofeeArray) {
+    private void setRecyclerView(ArrayList<MenuModel> cofeeArray) {
         recyclerView = rootView.findViewById(R.id.menu_recycler);
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         recyclerView.setAdapter(new MenuAdapter((AppCompatActivity) getActivity(), cofeeArray));

@@ -1,15 +1,17 @@
 package com.example.coffeeshop.Activities;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.widget.TextView;
 
-import com.example.coffeeshop.Adapters.MenuAdapter;
 import com.example.coffeeshop.Adapters.MenuDetailAdapter;
-import com.example.coffeeshop.Models.CoffeeModel;
+import com.example.coffeeshop.Controllers.Utils;
+import com.example.coffeeshop.Models.MenuItemModel;
 import com.example.coffeeshop.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -23,35 +25,36 @@ public class MenuDetailsActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     DatabaseReference ref;
-    ArrayList<CoffeeModel> cofeeArray;
+    ArrayList<MenuItemModel> cofeeArray;
+    String menuId;
+    Dialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_details);
+        menuId = getIntent().getStringExtra("menuId");
+        setToolbar();
+        progressDialog = Utils.getProgressDialog(this);
 
-
-        ref = FirebaseDatabase.getInstance().getReference().child("Menu").child("Coffee");
+        ref = FirebaseDatabase.getInstance().getReference().child("Menu").child(menuId).child("items");
         setDataintoArray();
-
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
 
     }
 
     private void setDataintoArray() {
+        progressDialog.show();
         cofeeArray = new ArrayList<>();
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    cofeeArray.add(ds.getValue(CoffeeModel.class));
+                    cofeeArray.add(ds.getValue(MenuItemModel.class));
                 }
                 setRecyclerView(cofeeArray);
+                progressDialog.hide();
             }
 
             @Override
@@ -60,11 +63,31 @@ public class MenuDetailsActivity extends AppCompatActivity {
             }
         });
     }
-    private void setRecyclerView(ArrayList<CoffeeModel> cofeeArray) {
-        recyclerView = findViewById(R.id.menu_recycler);
+
+    private void setRecyclerView(ArrayList<MenuItemModel> cofeeArray) {
+        recyclerView = findViewById(R.id.menudetail_recycler);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.setAdapter(new MenuDetailAdapter(this, cofeeArray));
     }
 
+    private void setToolbar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        final TextView title = findViewById(R.id.toolbar_title);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        ref = FirebaseDatabase.getInstance().getReference().child("Menu").child(menuId).child("define");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                title.setText(dataSnapshot.child("name").getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
 
 }

@@ -1,10 +1,12 @@
 package com.example.coffeeshop.Controllers;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
@@ -114,6 +116,7 @@ public class Utils {
     }
 
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static Dialog getProgressDialog(Context context) {
 
         int llPadding = 30;
@@ -121,6 +124,7 @@ public class Utils {
         ll.setOrientation(LinearLayout.HORIZONTAL);
         ll.setPadding(llPadding, llPadding, llPadding, llPadding);
         ll.setGravity(Gravity.CENTER);
+        ll.setBackground(context.getDrawable(R.drawable.rounded_dialog));
         LinearLayout.LayoutParams llParam = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -158,7 +162,8 @@ public class Utils {
             layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT;
             dialog.getWindow().setAttributes(layoutParams);
         }
-
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setCancelable(false);
         return dialog;
     }
 
