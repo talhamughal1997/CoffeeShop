@@ -8,14 +8,15 @@ public class MenuItemModel implements Serializable{
     }
 
     String name, taste, description, imageUrl;
+    long price;
 
-    public MenuItemModel(String name, String taste, String description, String imageUrl) {
+    public MenuItemModel(String name, String taste, String description, String imageUrl, long price) {
         this.name = name;
         this.taste = taste;
         this.description = description;
         this.imageUrl = imageUrl;
+        this.price = price;
     }
-
 
     public String getName() {
         return name;
@@ -33,5 +34,7 @@ public class MenuItemModel implements Serializable{
         return imageUrl;
     }
 
-
+    public long getPrice() {
+        return price;
+    }
 }

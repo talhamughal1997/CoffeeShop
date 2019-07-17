@@ -21,10 +21,13 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.coffeeshop.R;
+
+import java.lang.reflect.Field;
 
 
 public class Utils {
@@ -167,5 +170,17 @@ public class Utils {
         return dialog;
     }
 
+
+    public static void setSpinnerHeight(Spinner spinner) {
+        try {
+            Field popup = Spinner.class.getDeclaredField("mPopup");
+            popup.setAccessible(true);
+            android.widget.ListPopupWindow popupWindow = (android.widget.ListPopupWindow) popup.get(spinner);
+
+            popupWindow.setHeight(500);
+        } catch (NoClassDefFoundError | ClassCastException | NoSuchFieldException | IllegalAccessException e) {
+            // silently fail...
+        }
+    }
 
 }

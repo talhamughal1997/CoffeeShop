@@ -6,9 +6,14 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DecodeFormat;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.coffeeshop.Adapters.MenuDetailAdapter;
 import com.example.coffeeshop.Controllers.Utils;
 import com.example.coffeeshop.Models.MenuItemModel;
@@ -28,6 +33,7 @@ public class MenuDetailsActivity extends AppCompatActivity {
     ArrayList<MenuItemModel> cofeeArray;
     String menuId;
     Dialog progressDialog;
+    private ImageView mImageView_item;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,11 +72,12 @@ public class MenuDetailsActivity extends AppCompatActivity {
 
     private void setRecyclerView(ArrayList<MenuItemModel> cofeeArray) {
         recyclerView = findViewById(R.id.menudetail_recycler);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, 1));
         recyclerView.setAdapter(new MenuDetailAdapter(this, cofeeArray));
     }
 
     private void setToolbar() {
+        mImageView_item = findViewById(R.id.collapse_img_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         final TextView title = findViewById(R.id.toolbar_title);
         setSupportActionBar(toolbar);
@@ -81,6 +88,8 @@ public class MenuDetailsActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 title.setText(dataSnapshot.child("name").getValue().toString());
+                Glide.with(MenuDetailsActivity.this).asBitmap().apply(new RequestOptions().format(DecodeFormat.PREFER_ARGB_8888)).load(dataSnapshot.child("imageUrl").getValue().toString()).into(mImageView_item);
+
             }
 
             @Override

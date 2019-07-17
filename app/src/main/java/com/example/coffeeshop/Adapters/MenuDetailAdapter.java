@@ -51,6 +51,7 @@ public class MenuDetailAdapter extends RecyclerView.Adapter<MenuDetailAdapter.My
     public void onBindViewHolder(@NonNull final MyViewHolder myViewHolder, final int i) {
         myViewHolder.mTextView_name.setText(arrayList.get(i).getName());
         myViewHolder.mTextView_taste.setText(arrayList.get(i).getTaste());
+        myViewHolder.mTextView_price.setText(String.valueOf(arrayList.get(i).getPrice()));
         storageReference = FirebaseStorage.getInstance().getReference();
 //        progressDialog.show();
         Glide.with(activity).asBitmap().apply(new RequestOptions().format(DecodeFormat.PREFER_ARGB_8888)).load(arrayList.get(i).getImageUrl()).into(myViewHolder.mImageView_item);

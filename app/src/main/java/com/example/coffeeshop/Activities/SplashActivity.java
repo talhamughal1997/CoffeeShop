@@ -21,10 +21,11 @@ public class SplashActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (getSharedPref())
-                    Utils.changeActivityAndFinish(SplashActivity.this, DashboardActivity.class, true);
-                else
-                    Utils.changeActivityAndFinish(SplashActivity.this, MainActivity.class,true);
+//                if (getSharedPref())
+//                    Utils.changeActivityAndFinish(SplashActivity.this, DashboardActivity.class, true);
+//                else
+//                    Utils.changeActivityAndFinish(SplashActivity.this, MainActivity.class,true);
+                Utils.changeActivity(SplashActivity.this,LoginActivity.class);
             }
         }, 1500);
 
