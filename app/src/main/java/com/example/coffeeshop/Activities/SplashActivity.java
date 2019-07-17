@@ -25,7 +25,7 @@ public class SplashActivity extends AppCompatActivity {
 //                    Utils.changeActivityAndFinish(SplashActivity.this, DashboardActivity.class, true);
 //                else
 //                    Utils.changeActivityAndFinish(SplashActivity.this, MainActivity.class,true);
-                Utils.changeActivity(SplashActivity.this,LoginActivity.class);
+                Utils.changeActivityAndFinish(SplashActivity.this,LoginActivity.class);
             }
         }, 1500);
 
