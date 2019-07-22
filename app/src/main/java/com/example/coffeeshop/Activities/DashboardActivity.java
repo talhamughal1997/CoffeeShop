@@ -28,6 +28,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         setSupportActionBar(toolbar);
 
         //   Utils.changeFragment(DashboardActivity.this, new MenuFragment());
+
         setDrawer();
     }
 
