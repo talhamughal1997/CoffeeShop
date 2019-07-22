@@ -28,7 +28,7 @@ public class LogInMainFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_log_in_main, container, false);
-        mButton_SignIn = rootView.findViewById(R.id.btn_sign_in);
+        mButton_SignIn = rootView.findViewById(R.id.btn_signIn);
         mButton_SignUp = rootView.findViewById(R.id.btn_sign_up);
         mImageView = rootView.findViewById(R.id.image);
 

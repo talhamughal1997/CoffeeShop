@@ -31,12 +31,12 @@
         android:textColor="@color/colorWhite"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@id/btn_sign_in"
+        app:layout_constraintBottom_toTopOf="@id/btn_signIn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/image" />
 
     <Button
-        android:id="@+id/btn_sign_in"
+        android:id="@+id/btn_signIn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="30dp"
