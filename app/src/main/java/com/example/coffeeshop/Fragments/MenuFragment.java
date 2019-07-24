@@ -74,7 +74,7 @@ public class MenuFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                progressDialog.hide();
             }
         });
     }
