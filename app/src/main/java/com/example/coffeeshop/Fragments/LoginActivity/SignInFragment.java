@@ -1,6 +1,7 @@
 package com.example.coffeeshop.Fragments.LoginActivity;
 
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -30,13 +31,13 @@ public class SignInFragment extends Fragment {
     View rootView;
     EditText mEditText_email, mEditText_password;
     Button mButton_sigIn;
+    Dialog progressDialog;
 
     private FirebaseAuth mAuth;
 
     public SignInFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,6 +48,7 @@ public class SignInFragment extends Fragment {
         mEditText_email = rootView.findViewById(R.id.edittext_email);
         mEditText_password = rootView.findViewById(R.id.edittext_password);
         mButton_sigIn = rootView.findViewById(R.id.btn_signIn);
+        progressDialog = Utils.getProgressDialog(getActivity());
 
         mButton_sigIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,22 +65,23 @@ public class SignInFragment extends Fragment {
         if (!validateForm()) {
             return;
         }
-
+        progressDialog.show();
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            progressDialog.hide();
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI();
                         } else {
+                            progressDialog.hide();
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
                             getExceptions(task);
                         }
-
                     }
                 });
 

@@ -1,6 +1,7 @@
 package com.example.coffeeshop.Fragments.LoginActivity;
 
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.coffeeshop.Controllers.Utils;
 import com.example.coffeeshop.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -28,9 +30,9 @@ import com.google.firebase.auth.FirebaseUser;
  */
 public class SignUpFragment extends Fragment {
 
-    EditText mEditText_email, mEditText_password,mEditText_cnfrm_password;
+    EditText mEditText_email, mEditText_password, mEditText_cnfrm_password;
     Button mButton_sigUp;
-
+    Dialog progressDialog;
     View rootView;
 
     private FirebaseAuth mAuth;
@@ -46,7 +48,7 @@ public class SignUpFragment extends Fragment {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_sign_up, container, false);
         mAuth = FirebaseAuth.getInstance();
-        mAuth = FirebaseAuth.getInstance();
+        progressDialog = Utils.getProgressDialog(getActivity());
         mEditText_email = rootView.findViewById(R.id.edittext_email);
         mEditText_password = rootView.findViewById(R.id.edittext_password);
         mEditText_cnfrm_password = rootView.findViewById(R.id.edittext_cnfrm_password);
@@ -91,17 +93,18 @@ public class SignUpFragment extends Fragment {
         return valid;
     }
 
-    private void setSignUp(String email,String password){
+    private void setSignUp(String email, String password) {
 
         if (!validateForm()) {
             return;
         }
-
+        progressDialog.show();
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            progressDialog.hide();
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("AuthSignUp", "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
@@ -111,6 +114,7 @@ public class SignUpFragment extends Fragment {
                             // If sign in fails, display a message to the user.
                             Log.w("AuthSignUp", "createUserWithEmail:failure", task.getException());
                             getExceptions(task);
+                            progressDialog.hide();
                             //updateUI(null);
                         }
                         // ...
@@ -119,7 +123,7 @@ public class SignUpFragment extends Fragment {
 
     }
 
-    private void getExceptions(Task<AuthResult> task){
+    private void getExceptions(Task<AuthResult> task) {
         try {
             throw task.getException();
         } catch (
@@ -138,7 +142,6 @@ public class SignUpFragment extends Fragment {
             Log.e("AuthSignUp", e.getMessage());
         }
     }
-
 
 
 }
