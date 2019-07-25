@@ -1,6 +1,8 @@
 package com.example.coffeeshop.Adapters;
 
+import android.app.Activity;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,9 +17,13 @@ import java.util.ArrayList;
 public class CartsAdapter extends RecyclerView.Adapter<CartsAdapter.CartViewHolder> {
 
     ArrayList<UserCartModel> arrayList;
+    UserCartModel mRecentlyDeletedItem;
+    int mRecentlyDeletedItemPosition;
+    Activity activity;
 
-    public CartsAdapter(ArrayList<UserCartModel> arrayList) {
+    public CartsAdapter(ArrayList<UserCartModel> arrayList, Activity activity) {
         this.arrayList = arrayList;
+        this.activity = activity;
     }
 
     @NonNull
@@ -52,4 +58,33 @@ public class CartsAdapter extends RecyclerView.Adapter<CartsAdapter.CartViewHold
             mTextView_price = itemView.findViewById(R.id.txt_item_price);
         }
     }
+
+
+    public void deleteItem(int position) {
+        mRecentlyDeletedItem = arrayList.get(position);
+        mRecentlyDeletedItemPosition = position;
+        arrayList.remove(position);
+        notifyItemRemoved(position);
+        showUndoSnackbar();
+    }
+
+    private void showUndoSnackbar() {
+        View view = activity.findViewById(R.id.card_constraint);
+        Snackbar snackbar = Snackbar.make(view, "Deleted",
+                Snackbar.LENGTH_LONG);
+        snackbar.setAction("Undo", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                undoDelete();
+            }
+        });
+        snackbar.show();
+    }
+
+    private void undoDelete() {
+        arrayList.add(mRecentlyDeletedItemPosition,
+                mRecentlyDeletedItem);
+        notifyItemInserted(mRecentlyDeletedItemPosition);
+    }
+
 }

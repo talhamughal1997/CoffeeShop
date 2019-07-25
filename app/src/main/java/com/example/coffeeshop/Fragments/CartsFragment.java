@@ -7,12 +7,14 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.coffeeshop.Adapters.CartsAdapter;
+import com.example.coffeeshop.Controllers.SwipeToDeleteCallback;
 import com.example.coffeeshop.Controllers.Utils;
 import com.example.coffeeshop.Models.UserCartModel;
 import com.example.coffeeshop.R;
@@ -49,8 +51,12 @@ public class CartsFragment extends Fragment {
 
     private void setRecyclerView(ArrayList<UserCartModel> arrayList) {
         RecyclerView recyclerView = rootView.findViewById(R.id.cart_recyclerview);
-        recyclerView.setAdapter(new CartsAdapter(arrayList));
+        CartsAdapter adapter = new CartsAdapter(arrayList,getActivity());
+        recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        ItemTouchHelper itemTouchHelper = new
+                ItemTouchHelper(new SwipeToDeleteCallback(adapter,getActivity()));
+        itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
     private void getData() {
@@ -73,5 +79,7 @@ public class CartsFragment extends Fragment {
         });
 
     }
+
+
 
 }
