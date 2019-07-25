@@ -21,7 +21,12 @@ import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.coffeeshop.Controllers.Utils;
 import com.example.coffeeshop.Models.MenuItemModel;
+import com.example.coffeeshop.Models.UserCartModel;
 import com.example.coffeeshop.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +38,8 @@ public class CartDialog extends DialogFragment {
     ImageView mImageView_item, mImageView_fav;
     Button btnAddToCart;
     Spinner mSpinner_quanity;
+    String name;
+    int qty;
     long price;
 
     @NonNull
@@ -116,6 +123,28 @@ public class CartDialog extends DialogFragment {
     private void setAddToCart() {
         if (mSpinner_quanity.getSelectedItem().equals(0) || price == 0) {
             Toast.makeText(getActivity(), "Select Quantity", Toast.LENGTH_SHORT).show();
+        } else {
+            AddOrderToDataBase();
         }
+    }
+
+    private void AddOrderToDataBase() {
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Carts").child(uid);
+        String pushId = ref.push().getKey();
+        name = menuItemModel.getName();
+        qty = Integer.parseInt(mSpinner_quanity.getSelectedItem().toString());
+        UserCartModel model = new UserCartModel(name, qty, price);
+        ref.child(pushId).setValue(model, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                if (databaseError == null) {
+                    Toast.makeText(getActivity(), "Added To Cart Successfully", Toast.LENGTH_SHORT).show();
+                    CartDialog.this.dismiss();
+                } else {
+                    Toast.makeText(getActivity(), "Data Could not be Saved . " + databaseError, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 }

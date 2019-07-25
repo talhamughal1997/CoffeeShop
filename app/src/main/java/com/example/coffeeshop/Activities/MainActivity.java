@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 setSharedPreferences();
-                Utils.changeActivityAndFinish(MainActivity.this, DashboardActivity.class, true);
+                Utils.changeActivityAndFinish(MainActivity.this, LoginActivity.class, true);
             }
         });
 
