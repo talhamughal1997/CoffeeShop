@@ -118,6 +118,11 @@ public class Utils {
         ((AppCompatActivity) activity).getSupportActionBar().setTitle("DashBoard");
     }
 
+    public static void changeTitle(Activity activity, String title,boolean isTextView) {
+        TextView txt = activity.findViewById(R.id.txt_toolbar);
+        txt.setText(title);
+    }
+
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static Dialog getProgressDialog(Context context) {

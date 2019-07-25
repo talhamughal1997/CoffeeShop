@@ -46,7 +46,7 @@ public class MenuFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_menu, container, false);
-
+        Utils.changeTitle(getActivity(),"MENU",true);
         progressDialog = Utils.getProgressDialog(getActivity());
 
         setDataintoArray();

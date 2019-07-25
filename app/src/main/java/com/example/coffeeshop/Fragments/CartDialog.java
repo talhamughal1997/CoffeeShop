@@ -46,7 +46,7 @@ public class CartDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
 
-        rootView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_cart, null, false);
+        rootView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_addtocart, null, false);
         menuItemModel = (MenuItemModel) getArguments().getSerializable("menuItem");
         viewInit();
         setData();
