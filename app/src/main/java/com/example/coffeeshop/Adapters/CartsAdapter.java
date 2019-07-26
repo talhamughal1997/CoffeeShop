@@ -8,9 +8,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.coffeeshop.Models.UserCartModel;
 import com.example.coffeeshop.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -20,10 +27,13 @@ public class CartsAdapter extends RecyclerView.Adapter<CartsAdapter.CartViewHold
     UserCartModel mRecentlyDeletedItem;
     int mRecentlyDeletedItemPosition;
     Activity activity;
+    boolean isUndo;
+    itemAddedListener listener;
 
-    public CartsAdapter(ArrayList<UserCartModel> arrayList, Activity activity) {
+    public CartsAdapter(ArrayList<UserCartModel> arrayList, Activity activity, itemAddedListener listener) {
         this.arrayList = arrayList;
         this.activity = activity;
+        this.listener = listener;
     }
 
     @NonNull
@@ -65,10 +75,10 @@ public class CartsAdapter extends RecyclerView.Adapter<CartsAdapter.CartViewHold
         mRecentlyDeletedItemPosition = position;
         arrayList.remove(position);
         notifyItemRemoved(position);
-        showUndoSnackbar();
+        showUndoSnackbar(position);
     }
 
-    private void showUndoSnackbar() {
+    private void showUndoSnackbar(final int position) {
         View view = activity.findViewById(R.id.card_constraint);
         Snackbar snackbar = Snackbar.make(view, "Deleted",
                 Snackbar.LENGTH_LONG);
@@ -78,13 +88,50 @@ public class CartsAdapter extends RecyclerView.Adapter<CartsAdapter.CartViewHold
                 undoDelete();
             }
         });
+        snackbar.setActionTextColor(activity.getResources().getColor(R.color.colorWhite));
         snackbar.show();
+        snackbar.addCallback(new Snackbar.Callback() {
+            @Override
+            public void onDismissed(Snackbar transientBottomBar, int event) {
+                final int[] count = {0};
+                final DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Carts").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot ds :dataSnapshot.getChildren()) {
+                            if (count[0] == position && isUndo == false){
+                                ds.getRef().removeValue();
+                                listener.setPrice(arrayList);
+                                break;
+                            }
+                            count[0]++;
+                        }
+                        isUndo = false;
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onShown(Snackbar sb) {
+                listener.setPrice(arrayList);
+            }
+        });
     }
 
     private void undoDelete() {
         arrayList.add(mRecentlyDeletedItemPosition,
                 mRecentlyDeletedItem);
         notifyItemInserted(mRecentlyDeletedItemPosition);
+        listener.setPrice(arrayList);
+        isUndo = true;
+    }
+
+    public interface itemAddedListener { void setPrice(ArrayList<UserCartModel> arrayList);
     }
 
 }

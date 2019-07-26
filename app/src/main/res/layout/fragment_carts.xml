@@ -9,22 +9,112 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/cart_recyclerview"
-        android:padding="10dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="540dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:padding="10dp"
+        app:layout_constraintBottom_toTopOf="@id/card_view"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <android.support.constraint.ConstraintLayout
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginBottom="4dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:cardElevation="2dp"
+        app:cardBackgroundColor="@color/colorCoffee"
+        app:layout_constraintBottom_toTopOf="@id/btn_proceed"
+        app:cardCornerRadius="8dp">
+
+    <android.support.constraint.ConstraintLayout
+        android:padding="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""/>
+            android:text="TOTAL"
+            android:fontFamily="@font/raleway_light"
+            android:textColor="@color/colorWhite"
+            android:textSize="20sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"/>
 
+        <TextView
+            android:id="@+id/txt_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="$ 0"
+            android:textColor="@color/colorWhite"
+            android:textSize="20sp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="GST"
+            android:fontFamily="@font/raleway_light"
+            android:textColor="@color/colorWhite"
+            android:textSize="20sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txt_total" />
+
+        <TextView
+            android:id="@+id/gst_percent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="13%"
+            android:textColor="@color/colorWhite"
+            android:textSize="20sp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txt_total" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="NET TOTAL"
+            android:fontFamily="@font/raleway_bold"
+            android:textColor="@color/colorWhite"
+            android:textSize="20sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/gst_percent" />
+
+        <TextView
+            android:id="@+id/net_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="$ 00"
+            android:letterSpacing="0.12"
+            android:textStyle="bold"
+            android:textColor="@color/colorWhite"
+            android:textSize="22sp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/gst_percent" />
 
     </android.support.constraint.ConstraintLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <Button
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:id="@+id/btn_proceed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:letterSpacing="0.8"
+        android:text="Proceed To CheckOut"
+        android:background="@drawable/corner_shape"
+        android:textColor="@color/colorWhite"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="`parent"/>
+
 </android.support.constraint.ConstraintLayout>
