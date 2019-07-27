@@ -4,14 +4,15 @@ package com.example.coffeeshop.Fragments;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.coffeeshop.Adapters.CartsAdapter;
 import com.example.coffeeshop.Controllers.SwipeToDeleteCallback;
@@ -33,7 +34,10 @@ import java.util.ArrayList;
 public class CartsFragment extends Fragment implements CartsAdapter.itemAddedListener {
 
     View rootView;
-    TextView mTextView_Total,mTextView_netTotal;
+    TextView mTextView_Total, mTextView_netTotal;
+    Button mButton_Checkout;
+    DatabaseReference reference;
+
     CartsAdapter adapter;
 
     public CartsFragment() {
@@ -46,10 +50,18 @@ public class CartsFragment extends Fragment implements CartsAdapter.itemAddedLis
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_carts, container, false);
-        mTextView_Total= rootView.findViewById(R.id.txt_total);
+        mTextView_Total = rootView.findViewById(R.id.txt_total);
         mTextView_netTotal = rootView.findViewById(R.id.net_total);
+        mButton_Checkout = rootView.findViewById(R.id.btn_checkout);
         Utils.changeTitle(getActivity(), "CARTS", true);
         getData();
+
+        mButton_Checkout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setCheckout();
+            }
+        });
         return rootView;
     }
 
@@ -66,7 +78,8 @@ public class CartsFragment extends Fragment implements CartsAdapter.itemAddedLis
     private void getData() {
         final ArrayList<UserCartModel> arrayList = new ArrayList<>();
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Carts").child(uid);
+
+        reference = FirebaseDatabase.getInstance().getReference().child("Carts").child(uid);
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -93,8 +106,30 @@ public class CartsFragment extends Fragment implements CartsAdapter.itemAddedLis
             total += arrayList.get(a).getPrice();
         }
         long net = total + ((total * 13) / 100);
-       mTextView_Total.setText("$ " + total);
-       mTextView_netTotal.setText("$ " + net);
+        mTextView_Total.setText("$ " + total);
+        mTextView_netTotal.setText("$ " + net);
+    }
+
+    private void setCheckout() {
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        reference = FirebaseDatabase.getInstance().getReference().child("Carts").child(uid);
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+                DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference().child("Checkouts").child(uid);
+                reference2.setValue(dataSnapshot.getValue());
+                reference.removeValue();
+                Utils.changeFragment((AppCompatActivity) getActivity(),new MenuFragment(),false);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
 }

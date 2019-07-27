@@ -1,6 +1,7 @@
 package com.example.coffeeshop.Adapters;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
@@ -88,7 +89,7 @@ public class CartsAdapter extends RecyclerView.Adapter<CartsAdapter.CartViewHold
                 undoDelete();
             }
         });
-        snackbar.setActionTextColor(activity.getResources().getColor(R.color.colorWhite));
+        snackbar.setActionTextColor(Color.YELLOW);
         snackbar.show();
         snackbar.addCallback(new Snackbar.Callback() {
             @Override
@@ -131,7 +132,6 @@ public class CartsAdapter extends RecyclerView.Adapter<CartsAdapter.CartViewHold
         isUndo = true;
     }
 
-    public interface itemAddedListener { void setPrice(ArrayList<UserCartModel> arrayList);
-    }
+    public interface itemAddedListener { void setPrice(ArrayList<UserCartModel> arrayList);}
 
 }
