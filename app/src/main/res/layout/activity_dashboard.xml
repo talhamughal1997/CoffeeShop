@@ -32,10 +32,10 @@
             android:layout_gravity="bottom"
             android:background="@color/colorPrimary"
             android:gravity="center"
-            android:textColor="@color/colorLight"
-            android:textSize="22sp"
             android:padding="10dp"
-            android:text="LogOut" />
+            android:text="LogOut"
+            android:textColor="@color/colorLight"
+            android:textSize="22sp" />
 
     </android.support.design.widget.NavigationView>
 

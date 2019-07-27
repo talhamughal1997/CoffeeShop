@@ -1,6 +1,7 @@
 package com.example.coffeeshop.Fragments;
 
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.coffeeshop.Adapters.CartsAdapter;
 import com.example.coffeeshop.Controllers.SwipeToDeleteCallback;
@@ -26,7 +28,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,6 +41,7 @@ public class CartsFragment extends Fragment implements CartsAdapter.itemAddedLis
     TextView mTextView_Total, mTextView_netTotal;
     Button mButton_Checkout;
     DatabaseReference reference;
+    Dialog progressDialog;
 
     CartsAdapter adapter;
 
@@ -53,6 +58,7 @@ public class CartsFragment extends Fragment implements CartsAdapter.itemAddedLis
         mTextView_Total = rootView.findViewById(R.id.txt_total);
         mTextView_netTotal = rootView.findViewById(R.id.net_total);
         mButton_Checkout = rootView.findViewById(R.id.btn_checkout);
+        progressDialog = Utils.getProgressDialog(getActivity());
         Utils.changeTitle(getActivity(), "CARTS", true);
         getData();
 
@@ -117,12 +123,25 @@ public class CartsFragment extends Fragment implements CartsAdapter.itemAddedLis
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                progressDialog.show();
+                if (dataSnapshot.getChildrenCount()>0) {
 
-                DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference().child("Checkouts").child(uid);
-                reference2.setValue(dataSnapshot.getValue());
-                reference.removeValue();
-                Utils.changeFragment((AppCompatActivity) getActivity(),new MenuFragment(),false);
+                    String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    String pushId = reference.push().getKey();
+
+                    DatabaseReference reference3 = FirebaseDatabase.getInstance().getReference().child("Checkouts").child(uid).child(pushId).child("Date");
+                    Date date = new Date();
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+                    reference3.setValue(formatter.format(date));
+
+                    DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference().child("Checkouts").child(uid).child(pushId).child("Items");
+                    reference2.setValue(dataSnapshot.getValue());
+
+                    reference.removeValue();
+                    Toast.makeText(getActivity(), "Order Placed SuccessFully", Toast.LENGTH_SHORT).show();
+                    Utils.changeFragment((AppCompatActivity) getActivity(), new MenuFragment(), false);
+                }
+                progressDialog.hide();
             }
 
             @Override
