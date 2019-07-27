@@ -65,7 +65,6 @@ public class MenuFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    Toast.makeText(getActivity(), ""+ds.getRef().getKey(), Toast.LENGTH_SHORT).show();
                     cofeeArray.add(ds.child("define").getValue(MenuModel.class));
                 }
                 setRecyclerView(cofeeArray);

@@ -138,8 +138,8 @@ public class CartsFragment extends Fragment implements CartsAdapter.itemAddedLis
                     reference2.setValue(dataSnapshot.getValue());
 
                     reference.removeValue();
-                    Toast.makeText(getActivity(), "Order Placed SuccessFully", Toast.LENGTH_SHORT).show();
                     Utils.changeFragment((AppCompatActivity) getActivity(), new MenuFragment(), false);
+                    Toast.makeText(getActivity(), "Order Placed SuccessFully", Toast.LENGTH_LONG).show();
                 }
                 progressDialog.hide();
             }
