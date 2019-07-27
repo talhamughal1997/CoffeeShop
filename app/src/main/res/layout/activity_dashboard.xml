@@ -26,6 +26,7 @@
         app:menu="@menu/activity_dashboard_drawer">
 
         <TextView
+            android:id="@+id/txt_logout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
@@ -34,7 +35,7 @@
             android:textColor="@color/colorLight"
             android:textSize="22sp"
             android:padding="10dp"
-            android:text="LogIn" />
+            android:text="LogOut" />
 
     </android.support.design.widget.NavigationView>
 
