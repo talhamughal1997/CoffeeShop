@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.coffeeshop.Activities.DashboardActivity;
 import com.example.coffeeshop.Adapters.CartsAdapter;
 import com.example.coffeeshop.Controllers.SwipeToDeleteCallback;
 import com.example.coffeeshop.Controllers.Utils;
@@ -138,7 +139,7 @@ public class CartsFragment extends Fragment implements CartsAdapter.itemAddedLis
                     reference2.setValue(dataSnapshot.getValue());
 
                     reference.removeValue();
-                    Utils.changeFragment((AppCompatActivity) getActivity(), new MenuFragment(), false);
+                    Utils.changeActivityAndFinish(getActivity(), DashboardActivity.class);
                     Toast.makeText(getActivity(), "Order Placed SuccessFully", Toast.LENGTH_LONG).show();
                 }
                 progressDialog.hide();
