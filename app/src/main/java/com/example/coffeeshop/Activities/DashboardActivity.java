@@ -72,7 +72,6 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     }
 
     private void setDrawer() {
-
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

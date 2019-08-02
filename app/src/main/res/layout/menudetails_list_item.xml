@@ -29,6 +29,7 @@
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -42,6 +43,7 @@
             android:gravity="start"
             android:text="Delisous Coffee"
             android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/txt_item_title" />
@@ -78,16 +80,14 @@
                 android:id="@+id/txt_cost"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
                 android:layout_centerInParent="true"
                 android:layout_margin="10dp"
                 android:fontFamily="@font/raleway_bold"
                 android:text="$12"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <ImageView
+          <!--  <ImageView
                 android:id="@+id/img_like"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
@@ -96,7 +96,7 @@
                 android:layout_centerInParent="true"
                 android:layout_gravity="end"
                 android:layout_margin="10dp"
-                android:src="@drawable/heart_outline" />
+                android:src="@drawable/heart_outline" />-->
 
         </RelativeLayout>
 

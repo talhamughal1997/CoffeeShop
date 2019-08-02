@@ -10,6 +10,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DecodeFormat;
@@ -73,7 +74,7 @@ public class MenuDetailsActivity extends AppCompatActivity {
     private void setRecyclerView(ArrayList<MenuItemModel> cofeeArray) {
         recyclerView = findViewById(R.id.menudetail_recycler);
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, 1));
-        recyclerView.setAdapter(new MenuDetailAdapter(this, cofeeArray));
+        recyclerView.setAdapter(new MenuDetailAdapter(this, cofeeArray,menuId));
     }
 
     private void setToolbar() {
@@ -98,5 +99,7 @@ public class MenuDetailsActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
 }

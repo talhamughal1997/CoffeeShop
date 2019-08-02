@@ -180,8 +180,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:layout_margin="20dp"
                 android:layout_marginTop="50dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
                 android:background="@drawable/corner_shape"
                 android:fontFamily="@font/raleway_light"
                 android:gravity="center"
@@ -194,7 +195,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/lineear_layout"
                 app:layout_constraintVertical_bias="1.0" />
-
 
         </android.support.constraint.ConstraintLayout>
     </android.support.v4.widget.NestedScrollView>
