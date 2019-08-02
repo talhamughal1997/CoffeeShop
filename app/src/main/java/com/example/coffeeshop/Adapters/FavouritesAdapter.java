@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.coffeeshop.Models.MenuItemModel;
-import com.example.coffeeshop.Models.UserCartModel;
 import com.example.coffeeshop.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -25,7 +24,7 @@ import java.util.ArrayList;
 public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.CartViewHolder> {
 
     ArrayList<MenuItemModel> arrayList;
-    UserCartModel mRecentlyDeletedItem;
+    MenuItemModel mRecentlyDeletedItem;
     int mRecentlyDeletedItemPosition;
     Activity activity;
     boolean isUndo;
@@ -38,7 +37,7 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Ca
     @NonNull
     @Override
     public CartViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.fa, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.fav_list_items, viewGroup, false);
         return new CartViewHolder(view);
     }
 
@@ -46,7 +45,7 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Ca
     public void onBindViewHolder(@NonNull CartViewHolder cartViewHolder, int i) {
 
         cartViewHolder.mTextView_name.setText(arrayList.get(i).getName());
-        cartViewHolder.mTextView_qty.setText(arrayList.get(i).getQty() + "x");
+        cartViewHolder.mTextView_qty.setText(arrayList.get(i).getDescription() + "x");
         cartViewHolder.mTextView_price.setText("$ " + arrayList.get(i).getPrice());
 
     }
@@ -97,8 +96,8 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Ca
                 ref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for (DataSnapshot ds :dataSnapshot.getChildren()) {
-                            if (count[0] == position && isUndo == false){
+                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                            if (count[0] == position && isUndo == false) {
                                 ds.getRef().removeValue();
                                 break;
                             }

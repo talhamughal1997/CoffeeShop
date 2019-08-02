@@ -6,24 +6,24 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
 import com.example.coffeeshop.Adapters.CartsAdapter;
+import com.example.coffeeshop.Adapters.FavouritesAdapter;
 import com.example.coffeeshop.R;
 
-public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
-    private CartsAdapter mAdapter;
+public class SwipeToDeleteFavourites extends ItemTouchHelper.SimpleCallback {
+    private FavouritesAdapter mAdapter;
     private Drawable icon;
     private ColorDrawable background;
     Context context;
     int count;
 
 
-    public SwipeToDeleteCallback(CartsAdapter adapter , Context context) {
+    public SwipeToDeleteFavourites(FavouritesAdapter adapter , Context context) {
         super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
         count = adapter.getItemCount();
         mAdapter = adapter;

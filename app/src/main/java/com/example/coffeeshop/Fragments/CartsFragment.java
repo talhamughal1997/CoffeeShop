@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -18,7 +17,7 @@ import android.widget.Toast;
 
 import com.example.coffeeshop.Activities.DashboardActivity;
 import com.example.coffeeshop.Adapters.CartsAdapter;
-import com.example.coffeeshop.Controllers.SwipeToDeleteCallback;
+import com.example.coffeeshop.Controllers.SwipeToDeleteCarts;
 import com.example.coffeeshop.Controllers.Utils;
 import com.example.coffeeshop.Models.UserCartModel;
 import com.example.coffeeshop.R;
@@ -78,7 +77,7 @@ public class CartsFragment extends Fragment implements CartsAdapter.itemAddedLis
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         ItemTouchHelper itemTouchHelper = new
-                ItemTouchHelper(new SwipeToDeleteCallback(adapter, getActivity()));
+                ItemTouchHelper(new SwipeToDeleteCarts(adapter, getActivity()));
         itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
