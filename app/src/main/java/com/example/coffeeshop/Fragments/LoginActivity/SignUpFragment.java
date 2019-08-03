@@ -49,10 +49,10 @@ public class SignUpFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_sign_up, container, false);
         mAuth = FirebaseAuth.getInstance();
         progressDialog = Utils.getProgressDialog(getActivity());
-        mEditText_email = rootView.findViewById(R.id.edittext_email);
-        mEditText_password = rootView.findViewById(R.id.edittext_password);
-        mEditText_cnfrm_password = rootView.findViewById(R.id.edittext_cnfrm_password);
-        mButton_sigUp = rootView.findViewById(R.id.btn_signUp);
+        mEditText_email = rootView.findViewById(R.id.edittext_name);
+        mEditText_password = rootView.findViewById(R.id.edittext_number);
+        mEditText_cnfrm_password = rootView.findViewById(R.id.edittext_address);
+        mButton_sigUp = rootView.findViewById(R.id.btn_continue);
 
         mButton_sigUp.setOnClickListener(new View.OnClickListener() {
             @Override

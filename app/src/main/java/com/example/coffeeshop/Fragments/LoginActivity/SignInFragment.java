@@ -45,8 +45,8 @@ public class SignInFragment extends Fragment {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_sign_in, container, false);
         mAuth = FirebaseAuth.getInstance();
-        mEditText_email = rootView.findViewById(R.id.edittext_email);
-        mEditText_password = rootView.findViewById(R.id.edittext_password);
+        mEditText_email = rootView.findViewById(R.id.edittext_name);
+        mEditText_password = rootView.findViewById(R.id.edittext_number);
         mButton_sigIn = rootView.findViewById(R.id.btn_signIn);
         progressDialog = Utils.getProgressDialog(getActivity());
 
