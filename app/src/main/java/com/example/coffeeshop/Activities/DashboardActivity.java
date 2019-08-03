@@ -8,6 +8,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.coffeeshop.Controllers.Utils;
@@ -15,10 +17,12 @@ import com.example.coffeeshop.Fragments.CartsFragment;
 import com.example.coffeeshop.Fragments.FavouritesFragment;
 import com.example.coffeeshop.Fragments.MenuFragment;
 import com.example.coffeeshop.R;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class DashboardActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     Toolbar toolbar;
+    TextView mTextView_logOut;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +32,16 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
+        mTextView_logOut = findViewById(R.id.txt_logout);
+        mTextView_logOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                    FirebaseAuth.getInstance().signOut();
+                    Utils.changeActivityAndFinish(DashboardActivity.this,LoginActivity.class,true);
+                }
+            }
+        });
 
         //   Utils.changeFragment(DashboardActivity.this, new MenuFragment());
 

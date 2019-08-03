@@ -99,7 +99,7 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Ca
             @Override
             public void onDismissed(Snackbar transientBottomBar, int event) {
                 final int[] count = {0};
-                final DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Carts").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                final DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Favourites").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
                 ref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
