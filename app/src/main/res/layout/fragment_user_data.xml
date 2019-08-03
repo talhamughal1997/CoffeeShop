@@ -45,7 +45,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-
             <TextView
                 android:id="@+id/text4"
                 android:layout_width="wrap_content"
@@ -88,7 +87,7 @@
                 android:layout_marginRight="10dp"
                 android:background="@drawable/editttext_bg"
                 android:fontFamily="@font/raleway_light"
-                android:hint="Password"
+                android:hint="Phone"
                 android:inputType="phone"
                 android:padding="15dp"
                 android:textColor="@color/colorWhite"
@@ -107,7 +106,7 @@
                 android:layout_marginRight="10dp"
                 android:background="@drawable/editttext_bg"
                 android:fontFamily="@font/raleway_light"
-                android:hint="Confirm Password"
+                android:hint="Address"
                 android:inputType="textPostalAddress"
                 android:padding="15dp"
                 android:textColor="@color/colorWhite"

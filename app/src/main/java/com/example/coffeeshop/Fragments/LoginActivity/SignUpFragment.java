@@ -2,28 +2,21 @@ package com.example.coffeeshop.Fragments.LoginActivity;
 
 
 import android.app.Dialog;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.support.transition.TransitionInflater;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.ImageView;
 
 import com.example.coffeeshop.Controllers.Utils;
 import com.example.coffeeshop.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
-import com.google.firebase.auth.FirebaseAuthUserCollisionException;
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
-import com.google.firebase.auth.FirebaseUser;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,11 +24,11 @@ import com.google.firebase.auth.FirebaseUser;
 public class SignUpFragment extends Fragment {
 
     EditText mEditText_email, mEditText_password, mEditText_cnfrm_password;
-    Button mButton_sigUp;
+    Button mButton_continue;
+    ImageView mImageView;
     Dialog progressDialog;
     View rootView;
 
-    private FirebaseAuth mAuth;
 
     public SignUpFragment() {
         // Required empty public constructor
@@ -47,17 +40,26 @@ public class SignUpFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_sign_up, container, false);
-        mAuth = FirebaseAuth.getInstance();
+
         progressDialog = Utils.getProgressDialog(getActivity());
         mEditText_email = rootView.findViewById(R.id.edittext_name);
         mEditText_password = rootView.findViewById(R.id.edittext_number);
         mEditText_cnfrm_password = rootView.findViewById(R.id.edittext_address);
-        mButton_sigUp = rootView.findViewById(R.id.btn_continue);
+        mImageView = rootView.findViewById(R.id.image);
+        mButton_continue = rootView.findViewById(R.id.btn_continue);
 
-        mButton_sigUp.setOnClickListener(new View.OnClickListener() {
+        mButton_continue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setSignUp(mEditText_email.getText().toString(), mEditText_password.getText().toString());
+                if (!validateForm()) {
+                    return;
+                }
+                Fragment fragment = new UserDataFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("email", mEditText_email.getText().toString());
+                bundle.putString("pswd", mEditText_password.getText().toString());
+                fragment.setArguments(bundle);
+                changeFragment(mImageView, "image", fragment);
             }
         });
 
@@ -93,53 +95,26 @@ public class SignUpFragment extends Fragment {
         return valid;
     }
 
-    private void setSignUp(String email, String password) {
+    private void changeFragment(ImageView imageView, String elementName, Fragment fragment) {
 
-        if (!validateForm()) {
-            return;
-        }
-        progressDialog.show();
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            progressDialog.hide();
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("AuthSignUp", "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT).show();
-                            //updateUI(user);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w("AuthSignUp", "createUserWithEmail:failure", task.getException());
-                            getExceptions(task);
-                            progressDialog.hide();
-                            //updateUI(null);
-                        }
-                        // ...
-                    }
-                });
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            setSharedElementReturnTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.change_image_transform));
+            setExitTransition(TransitionInflater.from(getActivity()).inflateTransition(android.R.transition.explode));
 
-    }
+            // Create new fragment to add (Fragment B)
+            fragment.setSharedElementEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.change_image_transform));
+            fragment.setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(android.R.transition.explode));
 
-    private void getExceptions(Task<AuthResult> task) {
-        try {
-            throw task.getException();
-        } catch (
-                FirebaseAuthWeakPasswordException e) {
-            mEditText_password.setError("Weak Password");
-            mEditText_password.requestFocus();
-        } catch (
-                FirebaseAuthInvalidCredentialsException e) {
-            mEditText_email.setError("Invalid Email");
-            mEditText_email.requestFocus();
-        } catch (
-                FirebaseAuthUserCollisionException e) {
-            mEditText_email.setError("User Already Exist");
-            mEditText_email.requestFocus();
-        } catch (Exception e) {
-            Log.e("AuthSignUp", e.getMessage());
+            // Our shared element (in Fragment A)
+
+            // Add Fragment B
+            FragmentTransaction ft = getFragmentManager().beginTransaction()
+                    .replace(R.id.container, fragment)
+                    .addToBackStack("transaction")
+                    .addSharedElement(imageView, "MyTransition");
+            ft.commit();
+        } else {
+            // Code to run on older devices
         }
     }
 
