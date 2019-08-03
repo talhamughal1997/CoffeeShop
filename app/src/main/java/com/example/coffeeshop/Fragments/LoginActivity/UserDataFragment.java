@@ -93,7 +93,7 @@ public class UserDataFragment extends Fragment {
                             FirebaseUser user = mAuth.getCurrentUser();
                             saveDataIntoDatabase(user.getUid());
                             Toast.makeText(getActivity(), "Your Account Successfully Created ", Toast.LENGTH_SHORT).show();
-                            Utils.changeActivityAndFinish(getActivity(), DashboardActivity.class,true);
+                            Utils.changeActivityAndFinish(getActivity(), DashboardActivity.class, true);
                             progressDialog.hide();
                             //updateUI(user);
                         } else {

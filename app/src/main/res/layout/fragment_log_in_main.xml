@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:fontFamily="@font/raleway_light"
-        android:text="Discover Amazing Thind Never Arround You"
+        android:text="Discover Amazing Thing Never Arround You"
         android:textAlignment="center"
         android:textColor="@color/colorWhite"
         android:textSize="24sp"
