@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,12 +19,7 @@ import com.example.coffeeshop.Models.UserModel;
 import com.example.coffeeshop.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
-import com.google.firebase.auth.FirebaseAuthUserCollisionException;
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -59,7 +53,7 @@ public class UserDataFragment extends Fragment {
         mButton_signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setSignUp(email, pswd);
+                saveDataIntoDatabase(mAuth.getCurrentUser().getUid());
             }
         });
 
@@ -77,57 +71,7 @@ public class UserDataFragment extends Fragment {
         pswd = getArguments().getString("pswd");
     }
 
-    private void setSignUp(String email, String password) {
 
-        if (!validateForm()) {
-            return;
-        }
-        progressDialog.show();
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("AuthSignUp", "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            saveDataIntoDatabase(user.getUid());
-                            Toast.makeText(getActivity(), "Your Account Successfully Created ", Toast.LENGTH_SHORT).show();
-                            Utils.changeActivityAndFinish(getActivity(), DashboardActivity.class, true);
-                            progressDialog.hide();
-                            //updateUI(user);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w("AuthSignUp", "createUserWithEmail:failure", task.getException());
-                            getExceptions(task);
-                            progressDialog.hide();
-                            //updateUI(null);
-                        }
-                        // ...
-                    }
-                });
-
-    }
-
-    private void getExceptions(Task<AuthResult> task) {
-        try {
-            throw task.getException();
-        } catch (
-                FirebaseAuthWeakPasswordException e) {
-            mEditText_phone.setError("Weak Password");
-            mEditText_phone.requestFocus();
-        } catch (
-                FirebaseAuthInvalidCredentialsException e) {
-            mEditText_name.setError("Invalid Email");
-            mEditText_name.requestFocus();
-        } catch (
-                FirebaseAuthUserCollisionException e) {
-            mEditText_name.setError("User Already Exist");
-            mEditText_name.requestFocus();
-        } catch (Exception e) {
-            Log.e("AuthSignUp", e.getMessage());
-        }
-    }
 
     private boolean validateForm() {
         boolean valid = true;
@@ -159,9 +103,23 @@ public class UserDataFragment extends Fragment {
     }
 
     private void saveDataIntoDatabase(String uid) {
+        progressDialog.show();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
         UserModel model = new UserModel(name, email, pswd, phone, address);
-        reference.setValue(model);
+        reference.setValue(model).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    Toast.makeText(getActivity(), "Your Account Successfully Created ", Toast.LENGTH_SHORT).show();
+                    Utils.changeActivityAndFinish(getActivity(), DashboardActivity.class, true);
+                }
+                else
+                {
+                    Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT).show();
+                }
+                progressDialog.hide();
+            }
+        });
 
     }
 
