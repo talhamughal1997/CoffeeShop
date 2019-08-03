@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.example.coffeeshop.Controllers.Utils;
 import com.example.coffeeshop.Fragments.CartsFragment;
+import com.example.coffeeshop.Fragments.FavouritesFragment;
 import com.example.coffeeshop.Fragments.MenuFragment;
 import com.example.coffeeshop.R;
 
@@ -56,7 +57,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         } else if (id == R.id.nav_menu) {
             Utils.changeFragment(DashboardActivity.this, new MenuFragment(), false);
         } else if (id == R.id.nav_favourites) {
-
+            Utils.changeFragment(DashboardActivity.this, new FavouritesFragment(), false);
         } else if (id == R.id.nav_cart) {
             Utils.changeFragment(DashboardActivity.this, new CartsFragment(), false);
 

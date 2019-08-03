@@ -3,6 +3,7 @@ package com.example.coffeeshop.Fragments;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,13 +13,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.coffeeshop.Adapters.FavouritesAdapter;
-import com.example.coffeeshop.Controllers.SwipeToDeleteCarts;
 import com.example.coffeeshop.Controllers.SwipeToDeleteFavourites;
 import com.example.coffeeshop.Controllers.Utils;
 import com.example.coffeeshop.Models.MenuItemModel;
-import com.example.coffeeshop.Models.UserCartModel;
 import com.example.coffeeshop.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -32,6 +36,7 @@ public class FavouritesFragment extends Fragment {
     FavouritesAdapter adapter;
     DatabaseReference reference;
     private Dialog progressDialog;
+    String uid;
 
     public FavouritesFragment() {
         // Required empty public constructor
@@ -43,6 +48,7 @@ public class FavouritesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_favourites, container, false);
+        uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         progressDialog = Utils.getProgressDialog(getActivity());
         Utils.changeTitle(getActivity(), "Favourites", true);
         getData();
@@ -60,7 +66,22 @@ public class FavouritesFragment extends Fragment {
     }
 
     private void getData() {
+        final ArrayList<MenuItemModel> arrayList = new ArrayList<>();
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Favourites").child(uid);
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    arrayList.add(ds.getValue(MenuItemModel.class));
+                }
+                setRecyclerView(arrayList);
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
     }
 
