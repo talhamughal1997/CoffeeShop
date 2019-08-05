@@ -2,18 +2,22 @@ package com.example.coffeeshop.Adapters;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.coffeeshop.Fragments.CartDialog;
 import com.example.coffeeshop.Models.MenuItemModel;
 import com.example.coffeeshop.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -71,7 +75,44 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Ca
             mTextView_desc = itemView.findViewById(R.id.txt_item_desc);
             mTextView_price = itemView.findViewById(R.id.txt_item_price);
             mImageView_item = itemView.findViewById(R.id.img_item);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showCartDialog(getAdapterPosition());
+                }
+            });
         }
+
+    }
+
+
+    private void showCartDialog(final int pos) {
+        final int[] a = new int[1];
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Favourites").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    if (a[0] == pos) {
+                        CartDialog dialog = new CartDialog();
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("menuItem", arrayList.get(pos));
+                        bundle.putString("itemId", ds.getKey());
+                        Toast.makeText(activity, ds.getKey(), Toast.LENGTH_SHORT).show();
+                        dialog.setArguments(bundle);
+                        ((AppCompatActivity)activity).getSupportFragmentManager().popBackStack();
+                        dialog.show(((AppCompatActivity) activity).getSupportFragmentManager(), "cart");
+                        break;
+                    }
+                    a[0]++;
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
 

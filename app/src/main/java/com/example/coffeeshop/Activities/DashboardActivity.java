@@ -18,6 +18,7 @@ import com.example.coffeeshop.Fragments.FavouritesFragment;
 import com.example.coffeeshop.Fragments.MenuFragment;
 import com.example.coffeeshop.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class DashboardActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -28,7 +29,8 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        Toast.makeText(this, user.getDisplayName(), Toast.LENGTH_SHORT).show();
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
@@ -38,7 +40,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
             public void onClick(View v) {
                 if (FirebaseAuth.getInstance().getCurrentUser() != null) {
                     FirebaseAuth.getInstance().signOut();
-                    Utils.changeActivityAndFinish(DashboardActivity.this,LoginActivity.class,true);
+                    Utils.changeActivityAndFinish(DashboardActivity.this, LoginActivity.class, true);
                 }
             }
         });

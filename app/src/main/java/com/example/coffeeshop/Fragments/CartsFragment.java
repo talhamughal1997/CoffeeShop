@@ -4,6 +4,9 @@ package com.example.coffeeshop.Fragments;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -42,6 +45,8 @@ public class CartsFragment extends Fragment implements CartsAdapter.itemAddedLis
     Button mButton_Checkout;
     DatabaseReference reference;
     Dialog progressDialog;
+    CoordinatorLayout mlayout;
+    BottomSheetBehavior behavior;
 
     CartsAdapter adapter;
 
@@ -58,7 +63,9 @@ public class CartsFragment extends Fragment implements CartsAdapter.itemAddedLis
         mTextView_Total = rootView.findViewById(R.id.txt_total);
         mTextView_netTotal = rootView.findViewById(R.id.net_total);
         mButton_Checkout = rootView.findViewById(R.id.btn_checkout);
+        mlayout = rootView.findViewById(R.id.coordinatorLayout);
         progressDialog = Utils.getProgressDialog(getActivity());
+        initBottomSheet();
         Utils.changeTitle(getActivity(), "CARTS", true);
         getData();
 
@@ -71,6 +78,24 @@ public class CartsFragment extends Fragment implements CartsAdapter.itemAddedLis
         return rootView;
     }
 
+    private void initBottomSheet(){
+        View bottomSheet = mlayout.findViewById(R.id.card_view);
+        behavior = BottomSheetBehavior.from(bottomSheet);
+        behavior.setPeekHeight(0);
+        behavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                // React to state change
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                // React to dragging events
+            }
+        });
+
+    }
+
     private void setRecyclerView(ArrayList<UserCartModel> arrayList) {
         RecyclerView recyclerView = rootView.findViewById(R.id.cart_recyclerview);
         adapter = new CartsAdapter(arrayList, getActivity(), this);
@@ -79,6 +104,35 @@ public class CartsFragment extends Fragment implements CartsAdapter.itemAddedLis
         ItemTouchHelper itemTouchHelper = new
                 ItemTouchHelper(new SwipeToDeleteCarts(adapter, getActivity()));
         itemTouchHelper.attachToRecyclerView(recyclerView);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_SETTLING) {
+                    if (behavior.getState() == BottomSheetBehavior.STATE_COLLAPSED)
+                    {
+                        behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                    }
+                    else {
+                        behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                    }
+                    // Now I have to check if the user has scrolled down or up.
+
+                }
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                /*if (dy < -30){
+                    behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                }
+                else if (dy > 30){
+                    behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                }*/
+            }
+        });
     }
 
     private void getData() {
@@ -117,13 +171,14 @@ public class CartsFragment extends Fragment implements CartsAdapter.itemAddedLis
     }
 
     private void setCheckout() {
-        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        progressDialog.show();
 
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         reference = FirebaseDatabase.getInstance().getReference().child("Carts").child(uid);
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                progressDialog.show();
+
                 if (dataSnapshot.getChildrenCount()>0) {
 
                     String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();

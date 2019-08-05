@@ -66,11 +66,12 @@ public class FavouritesFragment extends Fragment {
     }
 
     private void getData() {
-        final ArrayList<MenuItemModel> arrayList = new ArrayList<>();
+
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Favourites").child(uid);
-        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+        reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ArrayList<MenuItemModel> arrayList = new ArrayList<>();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     arrayList.add(ds.getValue(MenuItemModel.class));
                 }
