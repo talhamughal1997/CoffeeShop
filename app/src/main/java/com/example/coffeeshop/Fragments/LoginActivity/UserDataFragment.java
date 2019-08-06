@@ -2,7 +2,6 @@ package com.example.coffeeshop.Fragments.LoginActivity;
 
 
 import android.app.Dialog;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -22,8 +21,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.PhoneAuthCredential;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -57,6 +54,14 @@ public class UserDataFragment extends Fragment {
         mButton_signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!validateForm()) {
+                    return;
+                }
+                email = getArguments().getString("email");
+                pswd = getArguments().getString("pswd");
+                name= mEditText_name.getText().toString();
+                phone= mEditText_phone.getText().toString();
+                address= mEditText_adres.getText().toString();
                 saveDataIntoDatabase(mAuth.getCurrentUser().getUid());
             }
         });
@@ -70,11 +75,7 @@ public class UserDataFragment extends Fragment {
         mEditText_phone = rootView.findViewById(R.id.edittext_number);
         mEditText_adres = rootView.findViewById(R.id.edittext_address);
         mButton_signUp = rootView.findViewById(R.id.btn_sign_up);
-
-        email = getArguments().getString("email");
-        pswd = getArguments().getString("pswd");
     }
-
 
 
     private boolean validateForm() {
@@ -114,26 +115,45 @@ public class UserDataFragment extends Fragment {
         reference.setValue(model).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()){
+                if (task.isSuccessful()) {
                     Toast.makeText(getActivity(), "Your Account Successfully Created ", Toast.LENGTH_SHORT).show();
-                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                            .setDisplayName("Jane Q. User")
-                            .build();
-                    user.updateProfile(profileUpdates);
                     Utils.changeActivityAndFinish(getActivity(), DashboardActivity.class, true);
-                }
-                else
-                {
+                } else {
                     Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT).show();
                 }
                 progressDialog.hide();
             }
         });
-
-
-
-
-
     }
 
+    /*private void getCredential() {
+        String phoneNum = "+923043184007";
+
+        PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                phoneNum, 30L *//*timeout*//*, TimeUnit.SECONDS,
+                getActivity(), new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+
+                    @Override
+                    public void onCodeSent(String verificationId,
+                                           PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+                        // Save the verification id somewhere
+                        // ...
+
+                        // The corresponding whitelisted code above should be used to complete sign-in.
+
+                    }
+
+                    @Override
+                    public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
+                        // Sign in with the credential
+                        // ...
+                    }
+
+                    @Override
+                    public void onVerificationFailed(FirebaseException e) {
+                        // ...
+                    }
+
+                });
+    }*/
 }
