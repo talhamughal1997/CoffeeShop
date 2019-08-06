@@ -60,13 +60,13 @@ public class CartsFragment extends Fragment implements CartsAdapter.itemAddedLis
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_carts, container, false);
+        Utils.changeTitle(getActivity(), "CARTS", true);
         mTextView_Total = rootView.findViewById(R.id.txt_total);
         mTextView_netTotal = rootView.findViewById(R.id.net_total);
         mButton_Checkout = rootView.findViewById(R.id.btn_checkout);
         mlayout = rootView.findViewById(R.id.coordinatorLayout);
         progressDialog = Utils.getProgressDialog(getActivity());
         initBottomSheet();
-        Utils.changeTitle(getActivity(), "CARTS", true);
         getData();
 
         mButton_Checkout.setOnClickListener(new View.OnClickListener() {

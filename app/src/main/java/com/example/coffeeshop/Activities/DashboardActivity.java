@@ -16,6 +16,7 @@ import com.example.coffeeshop.Controllers.Utils;
 import com.example.coffeeshop.Fragments.CartsFragment;
 import com.example.coffeeshop.Fragments.FavouritesFragment;
 import com.example.coffeeshop.Fragments.MenuFragment;
+import com.example.coffeeshop.Fragments.ProfileFragment;
 import com.example.coffeeshop.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,8 +30,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        Toast.makeText(this, user.getDisplayName(), Toast.LENGTH_SHORT).show();
+        Utils.AUTH_UID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
@@ -78,7 +78,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
             Utils.changeFragment(DashboardActivity.this, new CartsFragment(), false);
 
         } else if (id == R.id.nav_profile) {
-
+            Utils.changeFragment(DashboardActivity.this, new ProfileFragment(), false);
         } else if (id == R.id.nav_setting) {
 
         }

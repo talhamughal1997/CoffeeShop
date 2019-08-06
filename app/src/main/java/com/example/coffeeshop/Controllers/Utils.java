@@ -32,7 +32,7 @@ import java.lang.reflect.Field;
 
 public class Utils {
 
-    public static String DEVICE_ID;
+    public static String AUTH_UID;
     public static final String DISCOVER = "DISCOVER_PREF";
 
     public static void changeFragment(AppCompatActivity context, Fragment fragment) {
