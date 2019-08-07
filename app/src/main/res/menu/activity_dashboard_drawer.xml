@@ -21,7 +21,7 @@
             android:title="PROFILE" />
         <item
             android:id="@+id/nav_setting"
-            android:title="SETTINGS" />
+            android:title="MY ORDERS" />
     </group>
 
 
